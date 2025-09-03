@@ -1,0 +1,110 @@
+/**
+ * Framework MVC PHP - Tema Leapcol
+ * Desarrollado por Leapcol Software y Tecnología
+ * Tema profesional minimalista
+ */
+
+/* Variables del tema */
+:root {
+    --leapcol-primary: #c40000;
+    --leapcol-secondary: #6c757d;
+    --leapcol-success: #198754;
+    --leapcol-info: #0dcaf0;
+    --leapcol-warning: #ffc107;
+    --leapcol-danger: #dc3545;
+    --leapcol-light: #f8f9fa;
+    --leapcol-dark: #212529;
+}
+
+/* Navbar profesional */
+.navbar-brand {
+    font-weight: 600;
+    color: var(--leapcol-dark) !important;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: var(--leapcol-secondary);
+    font-weight: 500;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: var(--leapcol-primary) !important;
+}
+
+.navbar-light .navbar-nav .nav-link.active {
+    color: var(--leapcol-primary) !important;
+}
+
+/* Cards con sombras suaves */
+.card {
+    transition: all 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Logo placeholder mejorado */
+.logo-placeholder {
+    width: 40px;
+    height: 40px;
+    background-color: var(--leapcol-light);
+    border: 1px solid var(--leapcol-secondary);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--leapcol-primary);
+    text-decoration: none;
+}
+
+.logo-placeholder:hover {
+    background-color: var(--leapcol-primary);
+    color: white;
+    text-decoration: none;
+}
+
+/* Botones con tema sutil de Leapcol */
+.btn-leapcol {
+    background-color: var(--leapcol-danger);
+    border-color: var(--leapcol-danger);
+    color: white;
+}
+
+.btn-leapcol:hover {
+    background-color: #b02a37;
+    border-color: #b02a37;
+    color: white;
+}
+
+/* Animaciones suaves */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mejoras de accesibilidad */
+.card-header {
+    font-weight: 600;
+}
+
+.text-muted {
+    font-size: 0.9rem;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+}
