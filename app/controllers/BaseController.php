@@ -8,9 +8,20 @@ class BaseController
 
     public function __construct() 
     {
-        // Cargar la conexión a la base de datos
-        require_once __DIR__ . '/../../config/Connection.php';
-        $this->db = Database::getInstance();
+        // Cargar helpers automáticamente
+        require_once __DIR__ . '/../helpers/functions.php';
+        
+        // Cargar la conexión a la base de datos (con manejo de errores)
+        try {
+            require_once __DIR__ . '/../../config/Connection.php';
+            $this->db = Database::getInstance();
+        } catch (Exception $e) {
+            // Si falla la conexión, crear un objeto mock para evitar errores
+            $this->db = new class {
+                public function testConnection() { return false; }
+                public function getConnection() { return null; }
+            };
+        }
     }
 
     /**

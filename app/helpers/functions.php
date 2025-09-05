@@ -46,6 +46,92 @@ function assets_url($path = '')
 }
 
 /**
+ * Cargar layout (header, footer, navbar, modal, etc.)
+ */
+function layout($template) 
+{
+    $templatePath = __DIR__ . '/../views/templates/' . $template . '.php';
+    
+    if (file_exists($templatePath)) {
+        require_once $templatePath;
+        return true;
+    }
+    
+    // Si está en subcarpeta (ej: modals/modal)
+    $subfolderPath = __DIR__ . '/../views/templates/' . $template . '.php';
+    if (file_exists($subfolderPath)) {
+        require_once $subfolderPath;
+        return true;
+    }
+    
+    return false;
+}
+
+/**
+ * Generar ruta de templates (views/templates/ + archivo.php)
+ */
+function templates_url($file = '') 
+{
+    $basePath = __DIR__ . '/../views/templates/';
+    
+    if (empty($file)) {
+        return $basePath;
+    }
+    
+    // Agregar .php si no lo tiene
+    if (substr($file, -4) !== '.php') {
+        $file .= '.php';
+    }
+    
+    return $basePath . $file;
+}
+
+/**
+ * Cargar modal (incluye el archivo directamente)
+ */
+function load_modal($file = '') 
+{
+    $basePath = __DIR__ . '/../views/templates/modals/';
+    
+    if (empty($file)) {
+        return false;
+    }
+    
+    // Agregar .php si no lo tiene
+    if (substr($file, -4) !== '.php') {
+        $file .= '.php';
+    }
+    
+    $modalPath = $basePath . $file;
+    
+    if (file_exists($modalPath)) {
+        require_once $modalPath;
+        return true;
+    }
+    
+    return false;
+}
+
+/**
+ * Obtener ruta de modal (solo la ruta, sin incluir)
+ */
+function modals_path($file = '') 
+{
+    $basePath = __DIR__ . '/../views/templates/modals/';
+    
+    if (empty($file)) {
+        return $basePath;
+    }
+    
+    // Agregar .php si no lo tiene
+    if (substr($file, -4) !== '.php') {
+        $file .= '.php';
+    }
+    
+    return $basePath . $file;
+}
+
+/**
  * Generar URL de medios/uploads (base_url + uploads/)
  */
 function media_url($path = '') 
@@ -53,6 +139,16 @@ function media_url($path = '')
     $config = get_app_config();
     $base = rtrim($config['base_url'], '/');
     return $base . '/uploads/' . ltrim($path, '/');
+}
+
+/**
+ * Generar URL de imágenes (base_url + assets/images/)
+ */
+function img_url($path = '') 
+{
+    $config = get_app_config();
+    $base = rtrim($config['base_url'], '/');
+    return $base . '/assets/images/' . ltrim($path, '/');
 }
 
 /**
@@ -164,6 +260,34 @@ function load_controller_js($controller = null, $method = null)
 }
 
 /**
+ * Cargar archivos JS específicos (desde el controlador)
+ */
+function load_js($files = []) 
+{
+    global $custom_js_files;
+    if (!isset($custom_js_files)) {
+        $custom_js_files = [];
+    }
+    
+    foreach ($files as $file) {
+        // Agregar .js si no lo tiene
+        if (substr($file, -3) !== '.js') {
+            $file .= '.js';
+        }
+        $custom_js_files[] = assets_url('js/' . $file);
+    }
+}
+
+/**
+ * Obtener archivos JS personalizados
+ */
+function get_custom_js() 
+{
+    global $custom_js_files;
+    return $custom_js_files ?? [];
+}
+
+/**
  * Cargar CSS específico del controlador
  */
 function load_controller_css($controller = null, $method = null) 
@@ -210,7 +334,7 @@ function sanitize_sql($input)
     return trim(htmlspecialchars($input, ENT_QUOTES, 'UTF-8'));
 }
 
-/**
+/** 
  * Validar y sanitizar entero
  */
 function sanitize_int($input, $min = null, $max = null) 

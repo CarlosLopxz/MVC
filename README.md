@@ -99,12 +99,12 @@ class MiModel extends BaseModel
 
 ### Crear una Vista
 ```php
-<?php require_once __DIR__ . '/../templates/header.php'; ?>
+<?php layout('header'); ?>
 
 <h1>Mi Vista</h1>
 <p><?php echo escape($mensaje); ?></p>
 
-<?php require_once __DIR__ . '/../templates/footer.php'; ?>
+<?php layout('footer'); ?>
 ```
 
 ## Características
@@ -131,6 +131,9 @@ class MiModel extends BaseModel
 - ✅ **Soporte para dark mode**
 - ✅ **Seguridad mejorada** (XSS, CSRF, headers de seguridad)
 - ✅ **Carpetas de uploads y vendor**
+- ✅ **Sistema de templates unificado** (función layout())
+- ✅ **Manejo robusto de errores de BD** (detección específica de errores)
+- ✅ **Dashboard con diagnóstico de sistema** (estado de BD, PHP, framework)
 
 ## Configuración de URLs (⚠️ IMPORTANTE)
 
@@ -155,8 +158,41 @@ echo base_url('dashboard'); // http://localhost/mvc/dashboard
 // URL de assets (automática = base_url + assets/)
 echo assets_url('css/app.css'); // http://localhost/mvc/assets/css/app.css
 
+// URL de imágenes (automática = base_url + assets/images/)
+echo img_url('logo.png'); // http://localhost/mvc/assets/images/logo.png
+
 // URL de medios (automática = base_url + uploads/)
 echo media_url('imagen.jpg'); // http://localhost/mvc/uploads/imagen.jpg
+```
+
+## Sistema de Templates Unificado
+
+### Función layout() - Carga de Templates
+Usa la función `layout()` para cargar cualquier template:
+
+```php
+<?php layout('header'); ?>   <!-- Carga header.php -->
+<?php layout('navbar'); ?>   <!-- Carga navbar.php -->
+<?php layout('footer'); ?>   <!-- Carga footer.php -->
+```
+
+### Función load_modal() - Carga de Modales
+Para modales, usa la función específica:
+
+```php
+<?php load_modal('modal'); ?>        <!-- Carga modals/modal.php -->
+<?php load_modal('confirmacion'); ?> <!-- Carga modals/confirmacion.php -->
+```
+
+### Estructura de Templates
+```
+app/views/templates/
+├── header.php          # Header principal
+├── footer.php          # Footer principal
+├── navbar.php          # Barra de navegación
+└── modals/             # Modales
+    ├── modal.php       # Modal genérico
+    └── confirmacion.php # Modal de confirmación
 ```
 
 ## Sistema de Assets Dinámico
@@ -181,10 +217,34 @@ assets/
     └── usuario.js           # JS del UsuarioController
 ```
 
+## Manejo de Errores de Base de Datos
+
+El framework incluye detección inteligente de errores de base de datos:
+
+### Estados de Base de Datos
+- ✅ **Conexión exitosa**: Base de datos configurada y funcionando
+- ⚠️ **Base de datos no configurada**: Campo `dbname` vacío
+- ❌ **Base de datos no existe**: Error `Unknown database`
+- ❌ **Credenciales incorrectas**: Error `Access denied`
+- ❌ **Base de datos no conectada**: Otros errores de conexión
+
+### Dashboard de Diagnóstico
+El dashboard muestra automáticamente:
+- Estado del framework MVC
+- Estado de conexión a la base de datos
+- Información del sistema (PHP, versión, entorno)
+- Mensajes de ayuda específicos según el error
+
+### Configuración Segura
+El framework continúa funcionando aunque la base de datos falle:
+- No muestra errores 404 por problemas de BD
+- Proporciona diagnóstico claro del problema
+- Permite navegar por la aplicación sin interrupciones
+
 ## Requisitos
 
 - PHP 7.4+
-- MySQL/MariaDB
+- MySQL/MariaDB (opcional - el framework funciona sin BD)
 - Apache con mod_rewrite habilitado
 
 ## Tema Corporativo Leapcol
@@ -228,4 +288,3 @@ Leapcol Software y Tecnología es una empresa especializada en el desarrollo de 
 
 ---
 
-*Framework desarrollado con ❤️ por Leapcol Software y Tecnología © 2025*

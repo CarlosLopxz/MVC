@@ -1,10 +1,4 @@
-<?php 
-// Cargar helpers
-require_once __DIR__ . '/../../helpers/functions.php';
-
-// Incluir header
-require_once __DIR__ . '/../templates/header.php'; 
-?>
+<?php layout('header'); ?>
 
 <!-- Header profesional -->
 <div class="row mb-4">
@@ -44,15 +38,26 @@ require_once __DIR__ . '/../templates/header.php';
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="flex-shrink-0">
-                        <div class="bg-info bg-opacity-10 rounded-circle p-3">
-                            <i class="fas fa-database text-info" style="font-size: 1.5rem;"></i>
+                        <div class="<?php echo $db_connected ? 'bg-success' : 'bg-danger'; ?> bg-opacity-10 rounded-circle p-3">
+                            <i class="fas fa-database <?php echo $db_connected ? 'text-success' : 'text-danger'; ?>" style="font-size: 1.5rem;"></i>
                         </div>
                     </div>
                     <div class="flex-grow-1 ms-3">
                         <h6 class="card-title mb-1">Base de Datos</h6>
-                        <p class="card-text fw-semibold mb-0 <?php echo strpos($db_status, 'exitosa') !== false ? 'text-success' : 'text-danger'; ?>">
+                        <p class="card-text fw-semibold mb-0 <?php echo $db_connected ? 'text-success' : 'text-danger'; ?>">
                             <?php echo escape($db_status); ?>
                         </p>
+                        <?php if (!$db_connected): ?>
+                        <small class="text-muted">
+                            <?php if (strpos($db_status, 'no existe') !== false): ?>
+                                Crea la base de datos o verifica el nombre
+                            <?php elseif (strpos($db_status, 'Credenciales') !== false): ?>
+                                Verifica usuario y contraseña
+                            <?php else: ?>
+                                Verifica la configuración en config/database.php
+                            <?php endif; ?>
+                        </small>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -81,7 +86,7 @@ require_once __DIR__ . '/../templates/header.php';
                 <tbody>
                     <tr>
                         <td><i class="fab fa-php me-2 text-muted"></i>PHP Version</td>
-                        <td class="fw-semibold"><?php echo phpversion(); ?></td>
+                        <td class="fw-semibold"><?= phpversion(); ?></td>
                         <td><span class="badge bg-light text-dark border">Activo</span></td>
                     </tr>
                     <tr>
@@ -101,7 +106,7 @@ require_once __DIR__ . '/../templates/header.php';
                     </tr>
                     <tr>
                         <td><i class="fas fa-clock me-2 text-muted"></i>Zona Horaria</td>
-                        <td class="fw-semibold"><?php echo date_default_timezone_get(); ?></td>
+                        <td class="fw-semibold"><?= date_default_timezone_get(); ?></td>
                         <td><span class="badge bg-light text-dark border">Configurado</span></td>
                     </tr>
                     <tr>
@@ -132,19 +137,60 @@ require_once __DIR__ . '/../templates/header.php';
             <i class="fas fa-rocket text-danger" style="font-size: 1.5rem;"></i>
         </div>
         <div class="flex-grow-1 ms-3">
-            <h6 class="alert-heading mb-1">¡Bienvenido al <?php echo get_app_config()['app_name']; ?>!</h6>
+            <h6 class="alert-heading mb-1">¡Bienvenido al <?= get_app_config()['app_name']; ?>!</h6>
             <p class="mb-0 text-muted">
-                Desarrollado por <strong class="text-dark"><?php echo get_app_config()['company_name']; ?></strong>. 
+                Desarrollado por <strong class="text-dark"><?= get_app_config()['company_name']; ?></strong>. 
                 El sistema está funcionando correctamente y listo para el desarrollo.
             </p>
         </div>
     </div>
 </div>
 
-<!-- Font Awesome para iconos -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-<?php 
-// Incluir footer
-require_once __DIR__ . '/../templates/footer.php'; 
-?>
+<?php layout('footer'); ?>
+
+<!-- JavaScript específico del Dashboard -->
+<script>
+    // Función para mostrar notificaciones con Bootstrap 5
+    function showNotification(message, type = 'success') {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        alertDiv.style.top = '20px';
+        alertDiv.style.right = '20px';
+        alertDiv.style.zIndex = '9999';
+        alertDiv.style.minWidth = '300px';
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        document.body.appendChild(alertDiv);
+        
+        // Auto-dismiss después de 3 segundos
+        setTimeout(() => {
+            if (alertDiv.parentNode) {
+                alertDiv.remove();
+            }
+        }, 3000);
+    }
+    
+    // Obtener icono según el tipo de notificación
+    function getIconForType(type) {
+        const icons = {
+            'success': 'check-circle',
+            'danger': 'exclamation-triangle',
+            'warning': 'exclamation-triangle',
+            'info': 'info-circle',
+            'primary': 'info-circle',
+            'secondary': 'info-circle'
+        };
+        return icons[type] || 'info-circle';
+    }
+    
+    // Variables globales para el controlador actual
+    window.CURRENT_CONTROLLER = '<?= get_current_controller(); ?>';
+    window.CURRENT_METHOD = '<?= get_current_method(); ?>';
+    
+    // Ejemplo de uso del sistema de notificaciones
+    // showNotification('Dashboard cargado correctamente', 'success');
+</script>

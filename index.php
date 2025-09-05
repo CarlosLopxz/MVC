@@ -15,10 +15,7 @@ define('ROOT_PATH', __DIR__);
 define('APP_PATH', ROOT_PATH . '/app');
 define('CONFIG_PATH', ROOT_PATH . '/config');
 
-// Cargar helpers
-require_once APP_PATH . '/helpers/functions.php';
-
-// Autoloader simple
+// Autoloader mejorado
 spl_autoload_register(function ($className) {
     $directories = [
         APP_PATH . '/controllers/',
@@ -34,6 +31,13 @@ spl_autoload_register(function ($className) {
         }
     }
 });
+
+// Cargar clases base automáticamente
+require_once APP_PATH . '/controllers/BaseController.php';
+require_once APP_PATH . '/models/BaseModel.php';
+
+// Cargar funciones helper
+require_once APP_PATH . '/helpers/functions.php';
 
 // Router básico
 function route() 
