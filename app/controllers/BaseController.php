@@ -64,7 +64,11 @@ class BaseController
         if ($viewPath) {
             require_once $viewPath;
         } else {
-            throw new Exception("Vista no encontrada: $view");
+            $this->showError(
+                'Vista No Encontrada',
+                'La vista solicitada no existe en el sistema',
+                "Vista: $view"
+            );
         }
     }
 
@@ -102,5 +106,23 @@ class BaseController
     protected function isGet() 
     {
         return $_SERVER['REQUEST_METHOD'] === 'GET';
+    }
+
+    /**
+     * Mostrar página de error personalizada
+     */
+    protected function showError($title, $message, $details = null) 
+    {
+        http_response_code(404);
+        
+        $data = [
+            'error_title' => $title,
+            'error_message' => $message,
+            'error_details' => $details
+        ];
+        
+        extract($data);
+        require_once __DIR__ . '/../views/error/index.php';
+        exit();
     }
 }

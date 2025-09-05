@@ -76,12 +76,14 @@ function route()
             throw new Exception("Controlador no encontrado: $controllerName");
         }
     } catch (Exception $e) {
-        // Manejar errores
+        // Manejar errores con página personalizada
         http_response_code(404);
-        echo "<h1>Error 404</h1>";
-        echo "<p>Página no encontrada</p>";
-        echo "<p>Error: " . escape($e->getMessage()) . "</p>";
-        echo "<a href='" . base_url() . "'>Volver al inicio</a>";
+        
+        $error_title = 'Página No Encontrada';
+        $error_message = 'La página solicitada no existe en el sistema';
+        $error_details = $e->getMessage();
+        
+        require_once APP_PATH . '/views/error/index.php';
     }
 }
 
